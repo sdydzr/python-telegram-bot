@@ -1,0 +1,40 @@
+pip install python-telegram-bot 
+from telegram import ReplyKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+TOKEN = 7628821089:AAHqljWapgK-PCf4wWQjZ0ofkWj1eT8GHoM
+
+def start(update, context):
+    menu = [
+        ["📄 Infofee", "⚙️ Pengaturan"],
+        ["❓ Bantuan"]
+    ]
+    reply_markup = ReplyKeyboardMarkup(menu, resize_keyboard=True)
+    update.message.reply_text(
+        "Selamat datang! Silakan pilih menu:",
+        reply_markup=reply_markup
+    )
+
+def handle_menu(update, context):
+    text = update.message.text
+    if text == "📄 Info":
+        update.message.reply_text("Ini adalah informasi bot…")
+    elif text == "⚙️ Pengaturan":
+        update.message.reply_text("Masuk ke menu pengaturan…")
+    elif text == "❓ Bantuan":
+        update.message.reply_text("Anda butuh bantuan? Kirim pertanyaan Anda.")
+    else:
+        update.message.reply_text("Maaf, saya tidak mengerti.")
+
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_menu))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == "__main__":
+    main()
